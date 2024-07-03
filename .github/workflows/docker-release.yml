@@ -35,12 +35,12 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/my_database_project:${{ steps.extract_tag.outputs.tag }}
+          tags: ghcr.io/${{ github.repository_owner }}/sqllight:${{ steps.extract_tag.outputs.tag }}
 
       - name: Docker metadata
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/${{ github.repository_owner }}/my_database_project
+          images: ghcr.io/${{ github.repository_owner }}/sqllight
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
