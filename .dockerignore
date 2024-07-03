@@ -1,0 +1,26 @@
+# Ignore the build directory
+build/
+
+# Ignore the tests directory
+tests/
+
+# Ignore git-related files
+.git
+.gitignore
+
+# Ignore any log files
+*.log
+
+# Ignore any compiled files
+*.o
+*.out
+
+# Ignore editor-specific files
+*.swp
+*~
+.vscode/
+.idea/
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db

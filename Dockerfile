@@ -1,14 +1,14 @@
 # Use the official GCC image from the Docker Hub
 FROM gcc:latest
 
-# Create a directory for the app
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the source code into the container
+# Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-# Compile the source code to create the executable
-RUN gcc -o my_database main.c
+# Run the make command to build the project
+RUN make
 
 # Set the default command to run the executable
-CMD ["./my_database"]
+CMD ["./build/db", "mydb.db"]
