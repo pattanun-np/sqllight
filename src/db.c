@@ -1,19 +1,29 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include "repl.h"
+
 #include "executor.h"
+#include "repl.h"
 
 #define TABLE_MAX_PAGES 100
 #define PAGE_SIZE 4096
 
-void run_db_repl()
+int main(int argc, char *argv[])
 {
-    InputBuffer* input_buffer = new_input_buffer();
+    if (argc < 2)
+    {
+        printf("Must supply a database filename.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *filename = argv[1];
+
+    InputBuffer *input_buffer = new_input_buffer();
     print_welcome_message();
 
-    while (true) {
+    while (true)
+    {
         print_prompt();
         read_input(input_buffer);
 
@@ -36,7 +46,8 @@ void run_db_repl()
         case (PREPARE_SUCCESS):
             break;
         case (PREPARE_UNRECOGNIZED_STATEMENT):
-            printf("Unrecognized keyword at start of '%s'.\n", input_buffer->buffer);
+            printf("Unrecognized keyword at start of '%s'.\n",
+                   input_buffer->buffer);
             continue;
         }
 

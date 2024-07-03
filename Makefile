@@ -9,7 +9,7 @@ TARGET = build/db
 TEST_TARGET = build/test_repl
 
 # Define the source files
-SRCS = src/db.c src/repl.c src/main.c
+SRCS = src/db.c src/repl.c
 TEST_SRCS = tests/test_repl.c src/repl.c
 
 # Define the object files

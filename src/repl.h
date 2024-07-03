@@ -58,10 +58,8 @@ void read_input(InputBuffer* input_buffer);
 void close_input_buffer(InputBuffer* input_buffer);
 void print_help();
 void clear_screen();
-void run_repl();
 
 MetaCommandResult do_meta_commnand(InputBuffer *input_buffer);
 PrepareResult prepare_statement(InputBuffer *input_buffer, Statement *statement);
-void run_db_repl();
 
 #endif
