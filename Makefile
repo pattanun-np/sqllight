@@ -39,6 +39,10 @@ run: $(TARGET)
 # Rule to run the test executable
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
+	
+.PHONY: build
+build:
+	 mkdir ./build
 
 # Clean rule to remove compiled files
 .PHONY: clean
