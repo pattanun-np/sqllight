@@ -28,14 +28,14 @@ jobs:
 
       - name: Extract version tag
         id: extract_tag
-        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/sqllight:${{ steps.extract_tag.outputs.tag }}
+          tags: ghcr.io/${{ github.repository_owner }}/sqllight:${{ env.tag }}
 
       - name: Docker metadata
         uses: docker/metadata-action@v4
