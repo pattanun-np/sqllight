@@ -9,33 +9,27 @@ TARGET = build/db
 TEST_TARGET = build/test_repl
 
 # Define the source files
-SRCS = src/db.c src/repl.c
-TEST_SRCS = tests/test_repl.c src/repl.c
+SRCS = src/db.c src/repl.c src/executor.c
+TEST_SRCS = tests/test_repl.c src/repl.c src/executor.c
 
 # Define the object files
 OBJS = $(SRCS:src/%.c=build/%.o)
-TEST_OBJS = $(TEST_SRCS:%.c=build/%.o)
-
-# Ensure build directory exists
-DIRS = build
-
-$(DIRS):
-	mkdir -p $(DIRS)
+TEST_OBJS = $(TEST_SRCS:src/%.c=build/%.o)
 
 # Rule to build the target executable
-$(TARGET): $(DIRS) $(OBJS)
+$(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
 # Rule to build the test executable
-$(TEST_TARGET): $(DIRS) $(TEST_OBJS)
+$(TEST_TARGET): $(TEST_OBJS)
 	$(CC) $(CFLAGS) -o $(TEST_TARGET) $(TEST_OBJS)
 
 # Rule to build the object files
-build/%.o: src/%.c | $(DIRS)
+build/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Rule to build the test object files
-build/%.o: tests/%.c | $(DIRS)
+build/%.o: tests/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Rule to run the target executable

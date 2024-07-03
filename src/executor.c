@@ -1,5 +1,6 @@
 #include "repl.h"
 #include "executor.h"
+#include <stdio.h>
 
 void excute_statement(Statement *statement)
 {
@@ -14,11 +15,14 @@ void excute_statement(Statement *statement)
         break;
 
     case (STATEMENT_DELETE):
-        printf("This is where delete statement");
+        printf("This is where delete statement \n");
         break;
 
     case (STATEMENT_UPDATE):
-        printf("This us where update s");
+        printf("This us where update statement \n");
+        break;
+    case (STATEMENT_UNRECOGNIZED):
+        printf("This is where unrecognized statement \n");
         break;
     }
 }
