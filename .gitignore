@@ -13,6 +13,9 @@
 *.exp
 
 
+# vscode
+.vscode/
+
 # Precompiled Headers
 *.gch
 *.pch

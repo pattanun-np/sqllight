@@ -1,8 +1,0 @@
-{
-	"files.associations": {
-		"*.css": "tailwindcss",
-		"string.h": "c",
-		"repl.h": "c",
-		"executor.h": "c"
-	}
-}
