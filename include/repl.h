@@ -16,27 +16,13 @@ typedef struct {
     ssize_t input_length;
 } InputBuffer;
 
-typedef struct {
-    int id;
-    char username[32];
-    char email[255];
-} Row;
-
-typedef struct {
-    Row* rows;
-    size_t num_rows;
-    size_t max_rows;
-} Table;
-
 InputBuffer* new_input_buffer();
 void print_prompt();
+void print_welcome_message();
 void read_input(InputBuffer* input_buffer);
 void close_input_buffer(InputBuffer* input_buffer);
 void print_help();
 void clear_screen();
 void run_repl();
-void run_db_repl(Table* table);
-Table* new_table();
-void free_table(Table* table);
 
 #endif

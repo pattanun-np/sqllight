@@ -22,21 +22,46 @@ typedef struct {
     char email[255];
 } Row;
 
-typedef struct {
-    Row* rows;
-    size_t num_rows;
-    size_t max_rows;
-} Table;
+// Meta commands
+typedef enum
+{
+    META_COMMAND_SUCCESS,
+    META_COMMAND_UNRECOGNIZED_COMMAND
+} MetaCommandResult;
+
+// statement types
+typedef enum
+{
+    STATEMENT_INSERT,
+    STATEMENT_SELECT,
+    STATEMENT_DELETE,
+    STATEMENT_UPDATE,
+    STATEMENT_UNRECOGNIZED
+} StatementType;
+
+typedef enum
+{
+    PREPARE_SUCCESS,
+    PREPARE_UNRECOGNIZED_STATEMENT
+} PrepareResult;
+
+typedef struct
+{
+    StatementType type;
+} Statement;
 
 InputBuffer* new_input_buffer();
+
 void print_prompt();
+void print_welcome_message();
 void read_input(InputBuffer* input_buffer);
 void close_input_buffer(InputBuffer* input_buffer);
 void print_help();
 void clear_screen();
 void run_repl();
-void run_db_repl(Table* table);
-Table* new_table();
-void free_table(Table* table);
+
+MetaCommandResult do_meta_commnand(InputBuffer *input_buffer);
+PrepareResult prepare_statement(InputBuffer *input_buffer, Statement *statement);
+void run_db_repl();
 
 #endif
