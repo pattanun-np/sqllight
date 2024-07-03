@@ -8,7 +8,11 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Run the make command to build the project
-RUN make
+RUN make build
+
+RUN make format
+
+RUN make 
 
 # Set the default command to run the executable
 CMD ["./build/db", "mydb.db"]
