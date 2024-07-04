@@ -9,12 +9,12 @@ TARGET = build/db
 TEST_TARGET = build/test_repl
 
 # Define the source files
-SRCS = src/db.c src/repl.c src/executor.c
-TEST_SRCS = tests/test_repl.c src/repl.c src/executor.c
+src2S = src2/db.c 
+TEST_src2S = tests/test_repl.c
 
 # Define the object files
-OBJS = $(SRCS:src/%.c=build/%.o)
-TEST_OBJS = $(TEST_SRCS:src/%.c=build/%.o)
+OBJS = $(src2S:src2/%.c=build/%.o)
+TEST_OBJS = $(TEST_src2S:src2/%.c=build/%.o)
 
 # Rule to build the target executable
 $(TARGET): $(OBJS)
@@ -25,7 +25,7 @@ $(TEST_TARGET): $(TEST_OBJS)
 	$(CC) $(CFLAGS) -o $(TEST_TARGET) $(TEST_OBJS)
 
 # Rule to build the object files
-build/%.o: src/%.c
+build/%.o: src2/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Rule to build the test object files
@@ -52,4 +52,4 @@ clean:
 # Rule to format source files
 .PHONY: format
 format:
-	clang-format -style=Google -i src/*.c include/*.h
+	clang-format -style=Google -i src2/*.c include/*.h

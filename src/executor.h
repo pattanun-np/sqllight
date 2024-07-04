@@ -1,7 +1,10 @@
+#ifndef EXECUTOR_H
+#define EXECUTOR_H
 
-#include "repl.h"
+typedef enum
+{
+    EXECUTE_SUCCESS,
+    EXECUTE_DUPLICATE_KEY,
+} ExecuteResult;
 
-#ifndef EXCUTOR_H
-#define EXCUTOR_H
-void excute_statement(Statement *statement);
 #endif

@@ -1,28 +1,56 @@
 #include "executor.h"
 
 #include <stdio.h>
+#include <string.h>
 
-#include "repl.h"
+#include "b_tree.h"
+#include "cursor.h"
+#include "row.h"
+#include "statement.h"
+#include "table.h"
 
-void excute_statement(Statement *statement) {
+ExecuteResult execute_statement(Statement *statement, Table *table) {
   switch (statement->type) {
     case (STATEMENT_INSERT):
-      printf("This is where insert statement \n");
-      break;
-
+      return execute_insert(statement, table);
     case (STATEMENT_SELECT):
-      printf("This is where select \n");
-      break;
-
-    case (STATEMENT_DELETE):
-      printf("This is where delete statement \n");
-      break;
-
-    case (STATEMENT_UPDATE):
-      printf("This us where update statement \n");
-      break;
-    case (STATEMENT_UNRECOGNIZED):
-      printf("This is where unrecognized statement \n");
-      break;
+      return execute_select(statement, table);
   }
+}
+
+ExecuteResult execute_insert(Statement *statement, Table *table) {
+  Row *row_to_insert = &(statement->row_to_insert);
+  uint32_t key_to_insert = row_to_insert->id;
+  Cursor *cursor = table_find(table, key_to_insert);
+
+  void *node = get_page(table->pager, cursor->page_num);
+  uint32_t num_cells = *leaf_node_num_cells(node);
+
+  if (cursor->cell_num < num_cells) {
+    uint32_t key_at_index = *leaf_node_key(node, cursor->cell_num);
+    if (key_at_index == key_to_insert) {
+      return EXECUTE_DUPLICATE_KEY;
+    }
+  }
+
+  leaf_node_insert(cursor, row_to_insert->id, row_to_insert);
+
+  free(cursor);
+
+  return EXECUTE_SUCCESS;
+}
+
+ExecuteResult execute_select(Statement *statement, Table *table) {
+  Cursor *cursor = table_start(table);
+
+  Row row;
+  while (!(cursor->end_of_table)) {
+    deserialize_row(cursor_value(cursor), &row);
+    print_row(&row);
+    cursor_advance(cursor);
+  }
+
+  free(cursor);
+
+  return EXECUTE_SUCCESS;
 }
