@@ -619,7 +619,15 @@ InputBuffer *new_input_buffer()
     return input_buffer;
 }
 
-void print_prompt() { printf("db > "); }
+void print_prompt() { printf("sqllight > "); }
+void print_welcome()
+{
+    printf("##############################################\n");
+    printf("Welcome to sqllight\n");
+    printf("# Version 0.1\n");
+    printf("##############################################\n");
+    printf("Type \".help\" for help\n");
+}
 
 void read_input(InputBuffer *input_buffer)
 {
@@ -1171,7 +1179,9 @@ int main(int argc, char *argv[])
     InputBuffer *input_buffer = new_input_buffer();
     while (true)
     {
+        print_welcome();
         print_prompt();
+
         read_input(input_buffer);
 
         if (input_buffer->buffer[0] == '.')
