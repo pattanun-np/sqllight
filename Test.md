@@ -23,7 +23,7 @@ select
 .exit
 ```
 
-Duplicate Keysq
+Duplicate Key check 
 ```sh
 insert 1 user1 person1@example.com
 insert 1 user1 person1@example.com
