@@ -66,12 +66,12 @@ build_asm/%.o: tests/%.c
 # Rule to run the original target executable
 .PHONY: run_orig
 run_orig: $(TARGET_ORIG)
-	./$(TARGET_ORIG) mydb.db
+	./$(TARGET_ORIG) test.db
 
 # Rule to run the ASM target executable
 .PHONY: run_asm
 run_asm: $(TARGET_ASM)
-	./$(TARGET_ASM) mydb.db
+	./$(TARGET_ASM) test.db
 
 # Rule to run the original test executable
 .PHONY: test_orig

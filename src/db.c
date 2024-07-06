@@ -375,98 +375,18 @@ void print_tree(Pager *pager, uint32_t page_num, uint32_t indentation_level)
         break;
     }
 }
-// void serialize_row(Row *source, void *destination)
-// {
-
-//     memcpy(destination, source, sizeof(Row));
-// }
 void serialize_row(Row *source, void *destination)
 {
-#if defined(__x86_64__)
-    // x86-64 specific assembly
-    __asm__ volatile(
-        "movq %[src], %%rsi\n\t"
-        "movq %[dest], %%rdi\n\t"
-        "movq (%[src]), %%rax\n\t"
-        "movq %%rax, (%[dest])\n\t"
-        "lea 8(%[src]), %%rsi\n\t"
-        "lea 8(%[dest]), %%rdi\n\t"
-        "mov $32, %%rcx\n\t"
-        "rep movsb\n\t"
-        "movq 40(%[src]), %%rax\n\t"
-        "movq %%rax, 40(%[dest])\n\t"
-        :
-        : [src] "g"(source), [dest] "g"(destination)
-        : "rax", "rdi", "rsi", "rcx", "memory");
-#elif defined(__aarch64__)
-    // ARM-specific assembly
-    __asm__ volatile(
-        "ldr x0, [%[src]]\n\t"    // Load `id` from source to x0
-        "str x0, [%[dest]]\n\t"   // Store `id` from x0 to destination
-        "add x1, %[src], #8\n\t"  // Pointer to `username`
-        "add x2, %[dest], #8\n\t" // Pointer to `username` destination
-        "ldp x3, x4, [x1]\n\t"    // Load `username` part (assuming it can be covered by two registers)
-        "stp x3, x4, [x2]\n\t"    // Store `username` part
-        "add x1, x1, #16\n\t"     // Move to next part of `username`
-        "add x2, x2, #16\n\t"
-        "ldp x3, x4, [x1]\n\t"     // Continue loading `username`
-        "stp x3, x4, [x2]\n\t"     // Continue storing `username`
-        "add x1, %[src], #40\n\t"  // Pointer to `email`
-        "add x2, %[dest], #40\n\t" // Pointer to `email` destination
-        "ldr x3, [x1]\n\t"         // Load `email`
-        "str x3, [x2]\n\t"         // Store `email`
-        :
-        : [src] "r"(source), [dest] "r"(destination)
-        : "x0", "x1", "x2", "x3", "x4", "memory");
-#else
-    // Fallback to generic C for other architectures
+
     memcpy(destination, source, sizeof(Row));
-#endif
 }
 
 void deserialize_row(void *source, Row *destination)
 {
-#if defined(__x86_64__)
-    // x86-64 Assembly
-    __asm__ volatile(
-        "movq (%[src]), %%rax\n\t"    // Move id from source to RAX
-        "movq %%rax, (%[dest])\n\t"   // Copy id from RAX to destination
-        "leaq 8(%[src]), %%rsi\n\t"   // Move source pointer beyond id
-        "leaq 8(%[dest]), %%rdi\n\t"  // Move destination pointer beyond id
-        "mov $32, %%rcx\n\t"          // USERNAME_SIZE assumed to be 32
-        "rep movsb\n\t"               // Repeat move byte from RSI to RDI, RCX times
-        "movq 40(%[src]), %%rax\n\t"  // Assume EMAIL_SIZE begins at offset 40
-        "movq %%rax, 40(%[dest])\n\t" // Copy email from source to destination
-        :
-        : [src] "r"(source), [dest] "r"(destination)
-        : "rax", "rdi", "rsi", "rcx", "memory");
-#elif defined(__aarch64__)
-    // ARM AArch64 Assembly
-    __asm__ volatile(
-        "ldr x0, [%[src]]\n\t"     // Load id from source to x0
-        "str x0, [%[dest]]\n\t"    // Store id from x0 to destination
-        "add x1, %[src], #8\n\t"   // Pointer to `username`
-        "add x2, %[dest], #8\n\t"  // Pointer to `username` destination
-        "ldp x3, x4, [x1]\n\t"     // Load `username` part (assuming it can be covered by two registers)
-        "stp x3, x4, [x2]\n\t"     // Store `username` part
-        "add x1, %[src], #40\n\t"  // Pointer to `email`
-        "add x2, %[dest], #40\n\t" // Pointer to `email` destination
-        "ldr x3, [x1]\n\t"         // Load `email`
-        "str x3, [x2]\n\t"         // Store `email`
-        :
-        : [src] "r"(source), [dest] "r"(destination)
-        : "x0", "x1", "x2", "x3", "x4", "memory");
-#else
+
     // Fallback to generic C for other architectures
     memcpy(destination, source, sizeof(Row));
-#endif
 }
-// void deserialize_row(void *source, Row *destination)
-// {
-
-//     // Fallback to generic C for other architectures
-//     memcpy(destination, source, sizeof(Row));
-// }
 void initialize_leaf_node(void *node)
 {
     set_node_type(node, NODE_LEAF);

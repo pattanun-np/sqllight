@@ -62,7 +62,7 @@ char **run_script(char *script[], int count)
     return output;
 }
 
-void benchmark_inserts_and_selects(int num_operations)
+double benchmark_inserts_and_selects(int num_operations)
 {
     char **script = malloc(sizeof(char *) * (num_operations * 2 + 1));
     for (int i = 0; i < num_operations; i++)
@@ -78,25 +78,34 @@ void benchmark_inserts_and_selects(int num_operations)
     char **result = run_script(script, count);
     clock_t end = clock();
 
-    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Inserts and selects benchmark: %.6f seconds\n", time_spent);
-
     for (int i = 0; i < count; i++)
     {
         if (result[i])
         {
-            printf("%s\n", result[i]);
             free(result[i]);
         }
         free(script[i]);
     }
     free(script);
     free(result);
+
+    return (double)(end - start) / CLOCKS_PER_SEC;
 }
 
 int main()
 {
-    system("rm -rf ./build_orig/test.db"); // Setup - Remove existing database
-    benchmark_inserts_and_selects(10000);  // Run benchmark for 10,000 operations
+    int n_runs = 10; // Number of times to run the benchmark
+    double total_time = 0;
+
+    for (int i = 0; i < n_runs; i++)
+    {
+        system("rm -rf ./build_orig/test.db");                   // Setup - Remove existing database
+        double time_spent = benchmark_inserts_and_selects(1000); // Run benchmark
+        printf("Run %d: %.6f seconds\n", i + 1, time_spent);
+        total_time += time_spent;
+    }
+
+    printf("Average time: %.6f seconds\n", total_time / n_runs);
+
     return 0;
 }
